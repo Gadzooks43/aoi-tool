@@ -1,0 +1,63 @@
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+}
+
+.logo {
+  font-weight: bold;
+}
+
+.how-to-use-dropdown {
+  /* Additional styling for dropdown */
+}
+
+/* Sidebar styles */
+.sidebar {
+  position: absolute;
+  top: 50px; /* adjust as needed based on header height */
+  right: 10px;
+  width: 150px; /* adjust width as needed */
+  background-color: #444;
+  padding: 10px;
+  color: #fff;
+}
+
+.import-button,
+.export-button,
+.help-icon {
+  display: block;
+  margin-bottom: 10px;
+  /* Additional button styling */
+}
+
+/* Coordinate input styles (conditionally rendered) */
+.coordinate-input {
+  position: absolute;
+  top: 100px; /* Adjust based on layout */
+  right: 10px;
+  width: 150px; /* Match sidebar width */
+}
+
+/* GeoJSON Output styles */
+.geojson-output {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 150px; /* Match sidebar width */
+  height: 150px; /* Adjust height as needed */
+}
+
+/* Map container styles */
+.map-container {
+  position: relative;
+  height: calc(100vh - 20px); /* Full height minus header and any padding */
+  margin-left: 10px;
+  margin-top: 10px;
+  background-color: #999;
+}
+
+/* You'll need additional styles for buttons, dropdowns, and other interactive elements */

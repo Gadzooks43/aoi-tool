@@ -1,0 +1,18 @@
+.App {
+  text-align: left;
+  background-color: #161616;
+}
+
+.content {
+  padding: auto;
+  text-align: center;
+}
+
+.App-header {
+  background-color: #333;
+  height: 50px;
+  padding: 10px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
