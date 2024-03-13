@@ -25,8 +25,28 @@ const getGeojsonString = (geojson) => {
 
 }
 
-const getCoordinatesFromString = (string) => {
+const determineIfStringIsGeojson = (string) => {
+  try {
+    JSON.parse(string);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};
+
+const getCoordinatesFromString = (string, setIsImported) => {
+  if (string === '') {
+    setIsImported(false);
+    return null
+  };
+  if (determineIfStringIsGeojson(string)) {
+    var polygons = JSON.parse(string);
+    return polygons;
+  }
+  // replace new lines with ", "
+  string = string.replace(/\n/g, ', ');
   const coordinates = string.split(',');
+  console.log("coordinates", coordinates);
   if (coordinates.length % 2 !== 0) {
     alert('Invalid coordinates');
     return null;
@@ -34,7 +54,7 @@ const getCoordinatesFromString = (string) => {
 
   const pairs = [];
   for (let i = 0; i < coordinates.length; i += 2) {
-    pairs.push([parseFloat(coordinates[i]), parseFloat(coordinates[i + 1])]);
+    pairs.push([parseFloat(coordinates[i + 1]), parseFloat(coordinates[i])]);
   }
   // check if they are valid coordinates
   for (let i = 0; i < pairs.length; i++) {
@@ -43,10 +63,22 @@ const getCoordinatesFromString = (string) => {
       return null;
     }
   }
-  return pairs;
+  // convert pairs to geojson polygon
+  const convertToGeojsonPolygon = (coordinates) => {
+    const polygon = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Polygon',
+        coordinates: [coordinates]
+      }};
+    return polygon;
+  };
+  const polygon = convertToGeojsonPolygon(pairs);
+  return [polygon];
 };
 
-const Sidebar = ({ polygons, setMapCoordinateView }) => {
+const Sidebar = ({ polygons, setMapCoordinateView, setImportSoftReload }) => {
   const [geojson, setGeojson] = useState({});
   const [geojsonString, setGeojsonString] = useState('');
   const [isImported, setIsImported] = useState(false);
@@ -64,10 +96,12 @@ const Sidebar = ({ polygons, setMapCoordinateView }) => {
       setIsImported(true);
       return;
     }
-    const coordinates = getCoordinatesFromString(string);
-    if (coordinates === null) return;
-    console.log("coordinates", coordinates);
-    setMapCoordinateView(coordinates[0]);
+    const polygons = getCoordinatesFromString(string, setIsImported);
+    if (polygons === null) return;
+    console.log("coordinates", polygons);
+    const firstCoordinates = polygons[0].geometry.coordinates[0][0];
+    setMapCoordinateView(firstCoordinates);
+    setImportSoftReload(polygons);
     setIsImported(false);
   };
 
@@ -104,8 +138,8 @@ const Sidebar = ({ polygons, setMapCoordinateView }) => {
           <img src={undo} alt="Undo" style={{maxHeight: "15px", maxWidth: "15px"}}/>
         </button>
       </div>
-      {isImported && <div>
-        <textarea type="text" placeholder="PASTE COORDINATES" />
+      {isImported && <div style={{display: 'flex'}}>
+        <textarea type="text" placeholder="PASTE COORDINATES" onFocus={(e) => e.target.placeholder = ''} onBlur={(e) => e.target.placeholder = 'PASTE COORDINATES\nFORMAT:\nlat, lon\nlat, lon\nlat, lon'} style={{marginLeft: '10px', width: '250px', height: '100px', resize: 'none'}}/>
       </div>}
       <p style={{backgroundColor: 'grey', border: '1px solid lightgrey', padding: '5px 5px', margin: '10px 10px'}}>
         {geojsonString}

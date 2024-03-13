@@ -7,7 +7,24 @@ import './App.css';
 // Assign your Mapbox access token
 mapboxgl.accessToken = environment.mapbox.accessToken;
 
-const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView }) => {
+const getPointsFeaturesSoftReload = (polygons, handlePolygonClosed) => {
+  if (polygons && polygons.length > 0) {
+    console.log('Polygons: ', polygons);
+    // extract points from polygons
+    for (let i = 0; i < polygons.length; i++) {
+      handlePolygonClosed(polygons[i]);
+    }
+    const points = [];
+    for (let i = 0; i < polygons.length; i++) {
+      for (let j = 0; j < polygons[i].geometry.coordinates[0].length; j++) {
+        points.push(polygons[i].geometry.coordinates[0][j]);
+      }
+    }
+    return points;
+  }
+};
+
+const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView, polygons }) => {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
   const [lng, setLng] = useState(-96.7026); // Longitude
@@ -35,6 +52,13 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView }) => 
       dragRotate: false,
       touchZoomRotate: false
     });
+    markers.current = [];
+    firstPoint.current = null;
+    currentPoint.current = null;
+    handleMarkerUpdate(null);
+    handlePolygonClosed(null);
+
+    const points = getPointsFeaturesSoftReload(polygons, handlePolygonClosed);
 
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
     map.current.on('load', () => {
@@ -62,7 +86,7 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView }) => 
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: []
+            features: points && points.length > 0 ? [points] : []
           }
         },
         paint: {
@@ -78,7 +102,7 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView }) => 
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: []
+            features: points && points.length > 0 ? [points] : []
           }
         },
         paint: {
@@ -94,7 +118,7 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView }) => 
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: []
+            features: polygons ? [polygons] : []
           }
         },
         paint: {
@@ -102,7 +126,7 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView }) => 
           'fill-opacity': 0.4
         }
       });
-
+      // Add a point on the map
       map.current.on('click', (e) => {
         // Create a GeoJSON feature for the clicked location
         const feature = {
@@ -196,7 +220,7 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView }) => 
     });
 
     // Clean up on unmount
-    return () => map.current.remove();
+        return () => map.current.remove();
   }, [lat, lng]); // Empty dependency array means this effect will only run once
 
   return (
