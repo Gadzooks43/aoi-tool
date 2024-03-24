@@ -1,7 +1,11 @@
 // Header.js
 import React from 'react';
-import './styles/styles.css';
 import boveyeLogo from "../boveye_logo.png";
+
+const searchStyle = {display: 'flex', margin: 'auto', padding: '10px 10px', marginTop: '30px'};
+const searchInputStyle = {margin: 'auto', display: 'block', padding: '10px 10px'}
+const searchButtonStyle = {margin: 'auto', display: 'block', padding: '10px 10px', marginLeft: '5px'};
+const helpStyle = {margin: 'auto', display: 'block', padding: '10px 10px', marginRight: '300px', marginTop: '40px'};
 
 const Header = ({ setMapCoordinateView }) => {
   const handleSearch = (string) => {
@@ -24,16 +28,16 @@ const Header = ({ setMapCoordinateView }) => {
 
   return (
     <header style={{display: 'flex'}}>
-      <img src={boveyeLogo} alt='Logo' style={{}}/> 
-      <div style={{display: 'flex', margin: 'auto', padding: '10px 10px', marginTop: '30px'}}>
-        <input type="text" placeholder="SEARCH WITH COORDINATES" style={{margin: 'auto', display: 'block', padding: '10px 10px'}}/>
-        <button style={{margin: 'auto', display: 'block', padding: '10px 10px', marginLeft: '5px'}} onClick={() => {
+      <img className="logo" src={boveyeLogo} alt='Logo' style={{}}/> 
+      <div style={searchStyle}>
+        <input type="text" placeholder="SEARCH WITH COORDINATES" style={searchInputStyle}/>
+        <button style={searchButtonStyle} onClick={() => {
           const input = document.querySelector('input');
           handleSearch(input.value);
           input.value = '';
           }}>Search</button>
       </div>
-      <select style={{margin: 'auto', display: 'block', padding: '10px 10px', marginRight: '300px', marginTop: '40px'}}>
+      <select style={helpStyle}>
         <option value="" disabled selected>HOW TO USE</option>
         <option value="1"disabled>LEFT CLICK TO ADD POINTS</option>
         <option value="2"disabled>RIGHT CLICK TO CLOSE A BOUNDARY</option>

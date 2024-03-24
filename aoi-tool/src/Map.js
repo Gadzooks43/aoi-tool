@@ -224,7 +224,7 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView, polyg
   }, [lat, lng]); // Empty dependency array means this effect will only run once
 
   return (
-    <div className="map-container" ref={mapContainerRef} style={{width: '80vw', height: '83vh', border: '3px solid #C2A770', borderRadius: '10px'}}/>
+    <div className="map-container" ref={mapContainerRef} style={{width: '100%', height: '83vh', border: '3px solid #C2A770', borderRadius: '10px', display:"flex", margin:"auto"}}/>
   );
 };
 

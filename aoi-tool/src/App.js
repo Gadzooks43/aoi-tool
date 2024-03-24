@@ -3,6 +3,7 @@ import Map from './Map';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import './App.css';
+import MediaQuery from 'react-responsive';
 
 function App() {
   const [markers, setMarkers] = useState([]);
@@ -29,14 +30,21 @@ function App() {
 
   return (
     <div className="App">
-      <Header className="App-header" setMapCoordinateView={setMapCoordinateView}/>
-      <div className="content" style={{ display: "flex" }}>
-        <div className="column">
+      <MediaQuery minDeviceWidth={1224}>
+        <Header className="App-header" setMapCoordinateView={setMapCoordinateView}/>
+      </MediaQuery>
+      <MediaQuery maxDeviceWidth={1224}>
+       <Sidebar className="sidebar" polygons={polygons} setMapCoordinateView={setMapCoordinateView} setImportSoftReload={setImportSoftReload}/>
+      </MediaQuery>
+      <div className="content" style={{ display: "flex"}}>
+        <div className="column" style={{width:"100%", height:"100%"}}>
           <Map className="map" polygons={importSoftReload} handleMarkerUpdate={handleMarkerUpdate} handlePolygonClosed={handlePolygonClosed} mapCoordinateView={mapCoordinateView}/>
         </div>
-        <div className="column">
-          <Sidebar className="sidebar" polygons={polygons} setMapCoordinateView={setMapCoordinateView} setImportSoftReload={setImportSoftReload}/>
-        </div>
+        <MediaQuery minDeviceWidth={1224}>
+          <div className="sidebar-column">
+            <Sidebar className="sidebar" polygons={polygons} setMapCoordinateView={setMapCoordinateView} setImportSoftReload={setImportSoftReload}/>
+          </div>
+        </MediaQuery>
       </div>
     </div>
   );
