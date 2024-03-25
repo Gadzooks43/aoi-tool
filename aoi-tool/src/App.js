@@ -10,6 +10,7 @@ function App() {
   const [polygons, setPolygons] = useState([]);
   const [mapCoordinateView, setMapCoordinateView] = useState(null);
   const [importSoftReload, setImportSoftReload] = useState(null);
+  const [reset, setReset] = useState(false);
 
   const handleMarkerUpdate = (newMarker) => {
     if (newMarker === null) {
@@ -38,11 +39,11 @@ function App() {
       </MediaQuery>
       <div className="content" style={{ display: "flex"}}>
         <div className="column" style={{width:"100%", height:"100%"}}>
-          <Map className="map" polygons={importSoftReload} handleMarkerUpdate={handleMarkerUpdate} handlePolygonClosed={handlePolygonClosed} mapCoordinateView={mapCoordinateView}/>
+          <Map className="map" polygons={importSoftReload} handleMarkerUpdate={handleMarkerUpdate} handlePolygonClosed={handlePolygonClosed} mapCoordinateView={mapCoordinateView} reset={reset}/>
         </div>
         <MediaQuery minDeviceWidth={1224}>
           <div className="sidebar-column">
-            <Sidebar className="sidebar" polygons={polygons} setMapCoordinateView={setMapCoordinateView} setImportSoftReload={setImportSoftReload}/>
+            <Sidebar className="sidebar" polygons={polygons} setMapCoordinateView={setMapCoordinateView} setImportSoftReload={setImportSoftReload} setReset={setReset}/>
           </div>
         </MediaQuery>
       </div>

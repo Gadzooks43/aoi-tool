@@ -22,9 +22,25 @@ const getPointsFeaturesSoftReload = (polygons, handlePolygonClosed) => {
     }
     return points;
   }
+  return [];
 };
 
-const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView, polygons }) => {
+function clearMap(map) {
+  // List of custom layer IDs you've added to your map
+  const customLayerIds = ['points_overlaps', 'points', 'polyline', 'polygon'];
+
+  customLayerIds.forEach(layerId => {
+    // Check if the layer exists before trying to remove it
+    if (map.getLayer(layerId)) {
+      map.removeLayer(layerId);
+      // Also remove the source associated with this layer
+      map.removeSource(layerId);
+    }
+  });
+}
+
+
+const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView, polygons, reset }) => {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
   const [lng, setLng] = useState(-96.7026); // Longitude
@@ -41,6 +57,13 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView, polyg
       setLat(mapCoordinateView[1]);
     }
   }, [mapCoordinateView]);
+
+  useEffect(() => {
+    console.log('Reset: ', reset)
+    if (reset) {
+      clearMap(map.current);
+    }
+  }, [reset]);
 
   // Initialize map when component mounts
   useEffect(() => {
