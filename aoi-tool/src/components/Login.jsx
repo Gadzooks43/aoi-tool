@@ -49,7 +49,7 @@ function Login() {
           />
         </div>
         <button type="submit" style={dataButtonStyle}>Login</button>
-        <a href="boveye-aoi-tool/register" style={dataButtonStyle}>Register</a>
+        <a href="/register" style={dataButtonStyle}>Register</a>
       </form>
     </div>
   );
