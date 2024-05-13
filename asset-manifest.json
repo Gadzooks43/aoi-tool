@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/boveye-aoi-tool/static/css/main.a1fe95fd.css",
-    "main.js": "/boveye-aoi-tool/static/js/main.e45516a4.js",
+    "main.js": "/boveye-aoi-tool/static/js/main.ebcc154c.js",
     "static/js/453.9d79ce41.chunk.js": "/boveye-aoi-tool/static/js/453.9d79ce41.chunk.js",
     "index.html": "/boveye-aoi-tool/index.html",
     "main.a1fe95fd.css.map": "/boveye-aoi-tool/static/css/main.a1fe95fd.css.map",
-    "main.e45516a4.js.map": "/boveye-aoi-tool/static/js/main.e45516a4.js.map",
+    "main.ebcc154c.js.map": "/boveye-aoi-tool/static/js/main.ebcc154c.js.map",
     "453.9d79ce41.chunk.js.map": "/boveye-aoi-tool/static/js/453.9d79ce41.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a1fe95fd.css",
-    "static/js/main.e45516a4.js"
+    "static/js/main.ebcc154c.js"
   ]
 }
