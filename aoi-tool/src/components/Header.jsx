@@ -1,5 +1,6 @@
 import React from 'react';
 import boveyeLogo from "../boveye_logo.png";
+import { useState } from 'react';
 
 const searchStyle = {display: 'flex', margin: 'auto', padding: '10px 10px', marginTop: '30px'};
 const searchInputStyle = {margin: 'auto', display: 'block', padding: '10px 10px'}
@@ -7,7 +8,8 @@ const searchButtonStyle = {margin: 'auto', display: 'block', padding: '10px 10px
 const helpStyle = {margin: 'auto', display: 'block', padding: '10px 10px', marginRight: '300px', marginTop: '40px', cursor: 'pointer'};
 const logoStyle = {maxHeight: "100px", maxWidth: "100%"};
 
-const Header = ({ setMapCoordinateView }) => {
+const Header = ({ setMapCoordinateView, setMode }) => {
+
   const handleSearch = (string) => {
     const parseCoordinates = (string) => {
       const coordinates = string.split(',');
@@ -23,6 +25,11 @@ const Header = ({ setMapCoordinateView }) => {
     setMapCoordinateView(coordinates);
     console.log('Search');
   }
+
+  const handleModeChange = (event) => {
+    setMode(event.target.value);
+    console.log("Current mode is: ", event.target.value);
+  };
 
   return (
     <header style={{display: 'flex'}}>
@@ -40,6 +47,10 @@ const Header = ({ setMapCoordinateView }) => {
         <option value="1"disabled>LEFT CLICK TO ADD POINTS</option>
         <option value="2"disabled>RIGHT CLICK TO CLOSE A BOUNDARY</option>
         <option value="3"disabled>EXPORT DOWNLOAD GEOJSON</option>
+      </select>
+      <select style={helpStyle} onChange={handleModeChange}>
+        <option value="Map Mode">Map Mode</option>
+        <option value="Annotated Mode">Annotated Mode</option>
       </select>
     </header>
   );

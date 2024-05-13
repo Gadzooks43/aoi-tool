@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
   mapbox: {
-    accessToken: 'pk.eyJ1Ijoia2VubmV5aXNhYWM0MyIsImEiOiJjbG83Zjl3eXAwNGd2MmlubnZ3eXhtNzRuIn0.UY80GYVzX8MOd2xEAQ8Xww' // Your access token goes here
+    accessToken: 'pk.eyJ1Ijoia2VubmV5aXNhYWM0MyIsImEiOiJjbHVqeTB2bHMwZXR4MmlvNm9lN3BjM2l1In0.i_1MEsZtTgsv9rE3IUUzyg' // Your access token goes here
   },
 };

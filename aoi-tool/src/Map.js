@@ -49,6 +49,7 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView, polyg
   const currentPoint = useRef(null); // [lng, lat]
   const firstPoint = useRef(null); // [lng, lat]
   const markers = useRef([]); // [lng, lat]
+  const [descriptionMarkerMode, setDescriptionMarkerMode] = useState(false);
 
   useEffect(() => {
     if (mapCoordinateView) {
@@ -151,50 +152,54 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView, polyg
       });
       // Add a point on the map
       map.current.on('click', (e) => {
-        // Create a GeoJSON feature for the clicked location
-        const feature = {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [e.lngLat.lng, e.lngLat.lat]
-          }
-        };
-        // get last point pushed from mapdata
-        if (currentPoint.current !== null) {
-          // Create a GeoJSON feature for the line
-          const line = {
+        if (!descriptionMarkerMode) {
+          // Create a GeoJSON feature for the clicked location
+          const feature = {
             type: 'Feature',
             geometry: {
-              type: 'LineString',
-              coordinates: [currentPoint.current, [e.lngLat.lng, e.lngLat.lat]]
+              type: 'Point',
+              coordinates: [e.lngLat.lng, e.lngLat.lat]
             }
           };
+          // get last point pushed from mapdata
+          if (currentPoint.current !== null) {
+            // Create a GeoJSON feature for the line
+            const line = {
+              type: 'Feature',
+              geometry: {
+                type: 'LineString',
+                coordinates: [currentPoint.current, [e.lngLat.lng, e.lngLat.lat]]
+              }
+            };
+  
+            // Get the current data of the polyline layer
+            const data = map.current.getSource('polyline')._data;
+  
+            // Add the new line to the polyline layer
+            data.features.push(line);
+            map.current.getSource('polyline').setData(data);
+          }
+  
+          // Get the current data of the points layer
+          const data = map.current.getSource('points')._data;
+          const overlaps = map.current.getSource('points_overlaps')._data;
+  
+          // Add the new feature to the points layer
+          data.features.push(feature);
+          overlaps.features.push(feature);
+          map.current.getSource('points').setData(data);
+          map.current.getSource('points_overlaps').setData(overlaps);
+  
+          // Pass the new point to the handleMarkerUpdate callback
+          handleMarkerUpdate(e.lngLat);
+          markers.current.push(e.lngLat);
+          if (firstPoint.current === null) {
+            firstPoint.current = [e.lngLat.lng, e.lngLat.lat];
+          }
+          currentPoint.current = [e.lngLat.lng, e.lngLat.lat]
+        } else {
 
-          // Get the current data of the polyline layer
-          const data = map.current.getSource('polyline')._data;
-
-          // Add the new line to the polyline layer
-          data.features.push(line);
-          map.current.getSource('polyline').setData(data);
         }
-
-        // Get the current data of the points layer
-        const data = map.current.getSource('points')._data;
-        const overlaps = map.current.getSource('points_overlaps')._data;
-
-        // Add the new feature to the points layer
-        data.features.push(feature);
-        overlaps.features.push(feature);
-        map.current.getSource('points').setData(data);
-        map.current.getSource('points_overlaps').setData(overlaps);
-
-        // Pass the new point to the handleMarkerUpdate callback
-        handleMarkerUpdate(e.lngLat);
-        markers.current.push(e.lngLat);
-        if (firstPoint.current === null) {
-          firstPoint.current = [e.lngLat.lng, e.lngLat.lat];
-        }
-        currentPoint.current = [e.lngLat.lng, e.lngLat.lat]
       });
 
       map.current.on('contextmenu', (e) => {
@@ -247,7 +252,10 @@ const Map = ({ handleMarkerUpdate, handlePolygonClosed, mapCoordinateView, polyg
   }, [lat, lng]); // Empty dependency array means this effect will only run once
 
   return (
-    <div className="map-container" ref={mapContainerRef} style={{width: '100%', height: '83vh', border: '3px solid #C2A770', borderRadius: '10px', display:"flex", margin:"auto"}}/>
+    <div>
+      <div className="map-container" ref={mapContainerRef} style={{width: '100%', height: '83vh', border: '3px solid #C2A770', borderRadius: '10px', display:"flex", margin:"auto"}}/>
+      <button id="markerButton" onClick={() => {setDescriptionMarkerMode(!descriptionMarkerMode)}} style={{position: "absolute", top: "17vh", left: "2vw", padding: "10px", borderRadius:"5px", textTransform:'uppercase', cursor:'pointer', border:"2px", backgroundColor: descriptionMarkerMode ? 'white' : 'lightGrey'}}>Add Marker</button>
+    </div>
   );
 };
 
